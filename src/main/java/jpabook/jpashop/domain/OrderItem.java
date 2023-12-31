@@ -4,18 +4,24 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jpabook.jpashop.domain.item.Item;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Getter @Setter
+@Getter
+@Setter
+@NoArgsConstructor
 public class OrderItem {
 
-	@Id @GeneratedValue
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "order_item_id")
 	private Long id;
 
@@ -30,5 +36,31 @@ public class OrderItem {
 	private int orderPrice;
 
 	private int count;
+
+	@Builder
+	private OrderItem(Item item, Order order, int orderPrice, int count) {
+		this.item = item;
+		this.order = order;
+		this.orderPrice = orderPrice;
+		this.count = count;
+	}
+
+	public static OrderItem createOrderItem(Item item, int orderPrice, int count) {
+		OrderItem orderItem = OrderItem.builder()
+			.item(item)
+			.orderPrice(orderPrice)
+			.count(count)
+			.build();
+		item.removeStock(count);
+		return orderItem;
+	}
+
+	public void cancel() {
+		getItem().addStock(count);
+	}
+
+	public int getTotalPrice() {
+		return getOrderPrice() * getCount();
+	}
 
 }
