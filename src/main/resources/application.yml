@@ -3,7 +3,8 @@ spring:
     prefix: classpath:/templates/
     suffix: .html
   datasource:
-    url: jdbc:h2:tcp://localhost/~/test
+#    url: jdbc:h2:tcp://localhost/~/test
+    url: jdbc:h2:mem:~/cafeKioskApplication
     username: sa
     password:
     driver-class-name: org.h2.Driver
@@ -14,6 +15,8 @@ spring:
       hibernate:
 #     show_sql: true
         format_sql: true
+        default_batch_fetch_size: 1000
+    open-in-view: false
 
 logging.level:
   org.hibernate.SQL: debug

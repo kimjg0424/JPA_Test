@@ -16,6 +16,17 @@ public class MemberService {
 
 	private final MemberRepository memberRepository;
 
+
+
+
+	@Transactional
+	public void update(Long id,String name){
+		Member member = memberRepository.findOne(id);
+		member.setName(name);
+	}
+
+
+
 	@Transactional
 	public Long join(Member member) {
 		validateDuplicateMember(member);
